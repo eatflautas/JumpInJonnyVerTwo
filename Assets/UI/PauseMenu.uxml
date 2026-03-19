@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/PauseMenu.uss?fileID=7433441132597879392&amp;guid=f2c51453e78ff1747a4cca590cc11151&amp;type=3#PauseMenu"/>
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement name="Container" style="flex-grow: 1; align-self: center; width: 253px; padding-bottom: 10%; padding-top: 10%; background-color: rgb(127, 127, 127); background-size: 100% 100%; -unity-background-scale-mode: stretch-to-fill; align-items: center; align-content: auto; height: 80%; opacity: 0.49;"/>
+    </ui:VisualElement>
+</ui:UXML>

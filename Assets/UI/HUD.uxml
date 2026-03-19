@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Image name="Crosshair" source="project://database/Assets/Sprites/Crosshair0.png?fileID=2800000&amp;guid=52cf73e4a531aae43b32d2ea94678d63&amp;type=3#Crosshair0" scale-mode="ScaleToFit" style="top: 50%; bottom: 178px; position: relative; align-self: stretch; align-content: auto; align-items: stretch; opacity: 0.69; scale: 0.7 0.7;"/>
+    </ui:VisualElement>
+</ui:UXML>
