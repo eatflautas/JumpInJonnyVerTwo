@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
-            playerVelocity.y = 0f;
+            playerVelocity.y = -2f;
         }
 
         // Read input
