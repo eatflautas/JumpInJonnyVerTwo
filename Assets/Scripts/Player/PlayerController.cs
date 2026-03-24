@@ -17,8 +17,6 @@ public class PlayerController : MonoBehaviour
     [Header("References")] 
     public Transform orientation;
     
-    [Header("Input Actions")]
-    public InputActionReference moveAction; // expects Vector2
     public InputActionReference jumpAction; // expects Button
 
     private void Awake()
@@ -30,17 +28,7 @@ public class PlayerController : MonoBehaviour
         controller = gameObject.AddComponent<CharacterController>();
     }
 
-    private void OnEnable()
-    {
-        moveAction.action.Enable();
-        jumpAction.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        moveAction.action.Disable();
-        jumpAction.action.Disable();
-    }
+    
 
     void Update()
     {
@@ -49,18 +37,19 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
+        // Read input
+        Vector2 input = InputManager.instance.MoveInput;
+        bool jumpTriggered = InputManager.instance.JumpJustPressed;
+        
+        // Check if player is on the floor
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
             playerVelocity.y = -2f;
         }
-
-        // Read input
-        Vector2 input = moveAction.action.ReadValue<Vector2>();
         
-
         // Jump
-        if (jumpAction.action.triggered && groundedPlayer)
+        if (jumpTriggered && groundedPlayer)
         {
             // parabolic force
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);

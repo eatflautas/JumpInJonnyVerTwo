@@ -64,5 +64,6 @@ public class InputManager : MonoBehaviour
         SprintIsPressed = _sprintInputAction.IsPressed();
         SprintWasReleased = _sprintInputAction.WasReleasedThisFrame();
         PauseJustPressed = _pauseInputAction.WasPressedThisFrame();
+        
     }
 }

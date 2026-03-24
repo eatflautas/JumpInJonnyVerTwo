@@ -4,6 +4,8 @@ public class PlayerRotation : MonoBehaviour
 {
     private Camera mainCamera;
 
+    public bool firstPersonMode = true;
+
     void Start()
     {
         // Finds the Main Camera
@@ -11,8 +13,11 @@ public class PlayerRotation : MonoBehaviour
     }
     void FixedUpdate()
     {
-        // Rotates the player to the camera every physics update
-        RotatePlayer();
+        if (firstPersonMode)
+        {
+            // Rotates the player to the camera every physics update
+            RotatePlayer();
+        }
     }
 
     void RotatePlayer()
