@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private Vector3 moveDirection;
     private bool groundedPlayer;
+    private float playerHeight;
 
     [Header("References")] 
     public Transform orientation;
@@ -37,12 +38,16 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
+        float playerHeight = controller.height;
+        
         // Read input
         Vector2 input = InputManager.instance.MoveInput;
         bool jumpTriggered = InputManager.instance.JumpJustPressed;
+        bool crouchPressedDown = InputManager.instance.CrouchIsPressed;
         
-        // Check if player is on the floor
+        // Player States
         groundedPlayer = controller.isGrounded;
+        
         if (groundedPlayer && playerVelocity.y < 0)
         {
             playerVelocity.y = -2f;
