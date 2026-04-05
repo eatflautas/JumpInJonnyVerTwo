@@ -5,38 +5,55 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private CharacterController controller;
     public static PlayerController instance;
-    public MovementState state;
     
-    private float currentSpeed = 5.0f;
-    private float goalSpeed = 5.0f;
-    private float lastGoalSpeed = 5.0f;
+    [Header("References")] 
+    public Transform orientation;
+    public MovementState state;
+    public LayerMask whatIsWall;
+    
+    // Velocity
+    private Vector3 playerVelocity;
+    private Vector3 moveDirection;
+    private Vector3 slideVelocity;
+    
+    // Set Speeds
+    private float currentSpeed;
+    private float goalSpeed;
+    private float lastGoalSpeed;
     
     // Player speeds
     public float walkSpeed = 5.0f;
     public float sprintSpeed = 7.0f;
     public float crouchSpeed = 3.5f;
     public float slideSpeed = 3.0f;
+    public float wallRunSpeed = 7.0f;
     
     // Heights
     public float crouchHeight = 0.5f;
     private float startHeight = 2.0f;
     public float jumpHeight = 1.5f;
+    public float minJumpHeight = 0.5f;
     
+    // Environment
     public float gravityValue = -9.81f;
-    public float skinWidth = .05f;
-    
-    private CharacterController controller;
-    private Vector3 playerVelocity;
-    private Vector3 moveDirection;
-    private Vector3 slideVelocity;
+    public float slideFriction = 10.0f;
     private bool groundedPlayer;
+    
+    // Wall Run
+    public float wallCheckDistance = .7f;
+    private bool isWallRunning;
+    private float forwardInput;
+    private RaycastHit leftWallHit;
+    private RaycastHit rightWallHit;
+    private bool wallLeft;
+    private bool wallRight;
+    
+    // Other Actions
+    private bool isSliding;
     private bool isCrouching;
     private bool isSprinting;
-
-    [Header("References")] 
-    public Transform orientation;
-    
     
 
     private void Awake()
@@ -52,9 +69,11 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        WallCheck();
         Slide();
         StateSetter();
         MovePlayer();
+        WallRun();
     }
 
     void MovePlayer()
@@ -63,38 +82,38 @@ public class PlayerController : MonoBehaviour
         // Read input
         Vector2 input = InputManager.instance.MoveInput;
         bool jumpTriggered = InputManager.instance.JumpJustPressed;
+        forwardInput = input.y;
         
-
         // Grounded check
         groundedPlayer = controller.isGrounded;
-
-        RaycastHit hit;
-        // thank you norm_thegamer
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 0.3f))
-        {
-            playerVelocity.y = -5f;
-        }
-        
         
         // Crouch
         controller.height = isCrouching ? crouchHeight : startHeight;
-
-        // Jump
-        if (jumpTriggered && groundedPlayer)
+        
+        // Gravity
+        if (state != MovementState.wallrunning)
+        {
+            // Apply gravity
+            playerVelocity.y += gravityValue * Time.deltaTime;
+        }
+        if (jumpTriggered && (groundedPlayer || state == MovementState.wallrunning))
         {
             // parabolic force
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
         }
 
-        // Apply gravity
-        playerVelocity.y += gravityValue * Time.deltaTime;
-
         // Calculate movement direction 
         moveDirection = orientation.forward * input.y + orientation.right * input.x;
-        
-        // Add friction to the slide
-        slideVelocity = Vector3.MoveTowards(slideVelocity, Vector3.zero, 50 * Time.deltaTime); 
 
+        RaycastHit hit;
+        // Finds the surface normal
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 0.1f))
+        {
+            playerVelocity.y = -15f;
+        }
+        
+        slideVelocity = Vector3.MoveTowards(slideVelocity, Vector3.zero, slideFriction * Time.deltaTime);
+        
         // Combine horizontal and vertical movement
         Vector3 finalMove = (moveDirection.normalized * currentSpeed  + slideVelocity) + (playerVelocity.y * Vector3.up);
         controller.Move(finalMove * Time.deltaTime);
@@ -117,12 +136,11 @@ public class PlayerController : MonoBehaviour
         currentSpeed = goalSpeed;
     }
 
-
-
 #region movement states
 
     public enum MovementState
     {
+        wallrunning,
         sliding,
         crouching,
         sprinting,
@@ -139,7 +157,15 @@ public class PlayerController : MonoBehaviour
         isCrouching = crouchHeldDown;
         isSprinting = sprintHeldDown;
 
-        if (slideVelocity.magnitude > 0.1f)
+        // Wall Running
+        if (isWallRunning)
+        {
+            state = MovementState.wallrunning;
+            goalSpeed = wallRunSpeed;
+        }
+        
+        // Sliding
+        else if (isSliding)
         {
             state = MovementState.sliding;
         }
@@ -191,7 +217,60 @@ public class PlayerController : MonoBehaviour
         bool slideTriggered = InputManager.instance.CrouchJustPressed;
         if (slideTriggered && groundedPlayer && isSprinting && currentSpeed > 6)
         {
+            isSliding = true;
             slideVelocity = (orientation.forward * slideSpeed);
         }
+        else if (slideVelocity.magnitude < 0.1f) 
+        {
+            isSliding = false;
+        }
     }
+    
+    #region wallrunning
+
+    private void WallCheck()
+    {
+        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
+        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
+    }
+    
+    private void WallRun()
+    {
+        // if a wall is detected and we are moving forward: start wall run
+        if ((wallLeft || wallRight) && forwardInput > 0 && !groundedPlayer)
+        {
+            Debug.Log("Walls detected");
+            // Start wall run
+            if (!isWallRunning)
+            {
+                WallRunStart();
+            }
+        }
+        else
+        {
+            WallRunEnd();
+        }
+        
+        Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+
+        Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+
+        playerVelocity += wallForward * wallRunSpeed;
+    }
+
+    private void WallRunJump()
+    {
+    }
+    
+    private void WallRunStart()
+    {
+        isWallRunning = true;
+        playerVelocity.y = 0;
+    }
+    
+    private void WallRunEnd()
+    {
+        isWallRunning = false;
+    }
+    #endregion
 }
