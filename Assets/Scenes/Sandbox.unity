@@ -3422,7 +3422,7 @@ GameObject:
   - component: {fileID: 7286557022204956225}
   - component: {fileID: 1510419369381194339}
   - component: {fileID: 1165425919937461947}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3991,20 +3991,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   orientation: {fileID: 8259014831288318268}
-  state: 0
+  state: 5
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 0
-  walkSpeed: 5
-  sprintSpeed: 7
-  crouchSpeed: 3.5
+    m_Bits: 256
+  walkSpeed: 6
+  sprintSpeed: 8.5
+  crouchSpeed: 4
   slideSpeed: 12
   wallRunSpeed: 7
   crouchHeight: 0.5
-  jumpHeight: 1.5
+  jumpHeight: 2.2
   minJumpHeight: 0.5
-  gravityValue: -9.81
+  gravityValue: -10
   slideFriction: 20
+  coyoteSetTime: 0.2
+  coyoteTimer: 0
+  wallCheckDistance: 0.7
 --- !u!114 &8644965313305398205
 MonoBehaviour:
   m_ObjectHideFlags: 0
