@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
     public float slideFriction = 10.0f;
     private bool groundedPlayer;
     
+    // Timers
+    public float coyoteSetTime = 0.2f;
+    public float coyoteTimer;
+    
     // Wall Run
     public float wallCheckDistance = .7f;
     private bool isWallRunning;
@@ -87,36 +91,48 @@ public class PlayerController : MonoBehaviour
         // Grounded check
         groundedPlayer = controller.isGrounded;
         
+        if (groundedPlayer || isWallRunning)
+        {
+            coyoteTimer = coyoteSetTime;
+        }
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+        }
+        
         // Crouch
         controller.height = isCrouching ? crouchHeight : startHeight;
         
         // Gravity
-        if (state != MovementState.wallrunning)
+        if (!isWallRunning)
         {
             // Apply gravity
             playerVelocity.y += gravityValue * Time.deltaTime;
         }
-        if (jumpTriggered && (groundedPlayer || state == MovementState.wallrunning))
+        
+        // Jump
+        if (jumpTriggered && (coyoteTimer > 0f))
         {
-            // parabolic force
-            playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+            Jump();
         }
 
         // Calculate movement direction 
         moveDirection = orientation.forward * input.y + orientation.right * input.x;
-
-        RaycastHit hit;
-        // Finds the surface normal
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 0.1f))
-        {
-            playerVelocity.y = -15f;
-        }
-        
         slideVelocity = Vector3.MoveTowards(slideVelocity, Vector3.zero, slideFriction * Time.deltaTime);
-        
+
+        // Downwards Y velocity cap
+        if (playerVelocity.y < gravityValue) { 
+            playerVelocity.y = gravityValue;
+        }
         // Combine horizontal and vertical movement
         Vector3 finalMove = (moveDirection.normalized * currentSpeed  + slideVelocity) + (playerVelocity.y * Vector3.up);
         controller.Move(finalMove * Time.deltaTime);
+    }
+
+    private void Jump()
+    {
+        // parabolic force
+        playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
     }
 
     private IEnumerator SmoothlyLerpPlayerSpeed()
@@ -219,6 +235,7 @@ public class PlayerController : MonoBehaviour
         {
             isSliding = true;
             slideVelocity = (orientation.forward * slideSpeed);
+            slideVelocity.y = 0f;
         }
         else if (slideVelocity.magnitude < 0.1f) 
         {
