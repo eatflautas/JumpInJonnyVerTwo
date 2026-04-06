@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour
     public float crouchHeight = 0.5f;
     private float startHeight = 2.0f;
     public float jumpHeight = 1.5f;
-    public float minJumpHeight = 0.5f;
     
     // Environment
     public float gravityValue = -9.81f;
