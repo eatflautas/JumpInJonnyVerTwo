@@ -2,13 +2,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public GameState gameState;
+    public GameObject HUDManager;
 
     private UIDocument doc;
+    private HUDBehavior hud;
     
     public enum GameState
     {
@@ -39,8 +42,11 @@ public class UIManager : MonoBehaviour
         }
         
         doc = GetComponent<UIDocument>();
+        hud = HUDManager.GetComponent<HUDBehavior>();
+        
         // Hides the pause screen on start
         doc.rootVisualElement.visible = false;
+        LockCursor();
         
         Time.timeScale = 1f;
 
@@ -70,7 +76,7 @@ public class UIManager : MonoBehaviour
             {
                 Pause();
             }
-            else if (gameState == GameState.paused)
+            else
             {
                 Unpause();
             }
@@ -116,6 +122,8 @@ public class UIManager : MonoBehaviour
         Debug.Log("PauseManger paused game");
         Time.timeScale = 0f;
         doc.rootVisualElement.visible = true;
+        UnlockCursor();
+        hud.DisableHUD();
         gameState = GameState.paused;
     }
 
@@ -123,9 +131,26 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         doc.rootVisualElement.visible = false;
+        LockCursor();
+        hud.EnableHUD();
         gameState = GameState.running;
     }
     
     #endregion
+    
+    #region Cursor Actions
+
+    void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    
+    #endregion 
     
 }

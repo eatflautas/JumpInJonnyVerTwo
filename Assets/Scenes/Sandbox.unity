@@ -1857,6 +1857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   gameState: 0
+  HUDManager: {fileID: 6395130963866297405}
   levelSelectButtonsTemplate: {fileID: 9197481963319205126, guid: 6365791a0c6b5ba4baddf4e1add173e8, type: 3}
 --- !u!114 &1723887334
 MonoBehaviour:
@@ -3511,7 +3512,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6395130963866297405}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
@@ -3537,6 +3538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8273901270888964168}
   - component: {fileID: 6224004116448023733}
+  - component: {fileID: 8273901270888964169}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -3947,6 +3949,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 26363571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8273901270888964169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6395130963866297405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7bf79e14f51784eab6b50509961be9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HUDBehavior
 --- !u!1 &8418471678042596975
 GameObject:
   m_ObjectHideFlags: 0
