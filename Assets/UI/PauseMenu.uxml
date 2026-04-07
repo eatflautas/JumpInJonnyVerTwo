@@ -5,6 +5,7 @@
             <ui:Button text="Game Paused" name="Text" class="menu-button" style="font-size: 45%;"/>
             <ui:VisualElement name="Buttons" style="flex-grow: 1; margin-top: 10%; margin-bottom: 10%; align-self: center; justify-content: center;">
                 <ui:Button text="Continue" name="ContinueButton" class="pause-button"/>
+                <ui:Button text="Restart" name="RestartButton" class="pause-button"/>
                 <ui:Button text="Level Select" name="LevelSelectButton" class="pause-button"/>
                 <ui:Button text="Main Menu" name="MainMenuButton" class="pause-button"/>
             </ui:VisualElement>

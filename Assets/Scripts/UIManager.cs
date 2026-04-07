@@ -16,7 +16,8 @@ public class UIManager : MonoBehaviour
     public enum GameState
     {
         running,
-        paused
+        paused,
+        dead
     }
     
     // UI Variables:
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
 
     // Pause Screen Buttons
     private Button continueButton;
+    private Button restartButton;
     private Button levelSelectButton;
     private Button mainMenuButton;
     
@@ -33,6 +35,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VisualTreeAsset levelSelectButtonsTemplate;
     // Creates buttons based on file Above
     private VisualElement levelSelectButtons;
+    
+    // Dead Buttons
+    [SerializeField] 
+    private VisualTreeAsset deadButtonsTemplate;
+    // Creates buttons based on file Above
+    private VisualElement deadButtons;
     
     private void Awake()
     {
@@ -53,10 +61,13 @@ public class UIManager : MonoBehaviour
         // Wrappers & Templates
         buttonsWrapper = doc.rootVisualElement.Q<VisualElement>("Buttons");
         levelSelectButtons = levelSelectButtonsTemplate.CloneTree();
+        deadButtons = deadButtonsTemplate.CloneTree();
 
         // Main Menu buttons
         continueButton = doc.rootVisualElement.Q<Button>("ContinueButton");
         continueButton.clicked += ContinueButtonOnClicked;
+        restartButton = doc.rootVisualElement.Q<Button>("RestartButton");
+        restartButton.clicked += RestartLevel;
         levelSelectButton = doc.rootVisualElement.Q<Button>("LevelSelectButton");
         levelSelectButton.clicked += LevelSelectButtonOnClicked;
         mainMenuButton = doc.rootVisualElement.Q<Button>("MainMenuButton");
@@ -65,6 +76,12 @@ public class UIManager : MonoBehaviour
         // Level Select Buttons
         var backButton = levelSelectButtons.Q<Button>("BackButton"); 
         backButton.clicked += BackButtonOnClicked;
+        
+        // Dead Buttons
+        var deadMainMenuButton = deadButtons.Q<Button>("MainMenuButton");
+        deadMainMenuButton.clicked += MainMenuButtonOnClicked;
+        var deadRestartButton = deadButtons.Q<Button>("RestartButton");
+        deadRestartButton.clicked += RestartLevel;
     }
     private void Update()
     {
@@ -76,7 +93,7 @@ public class UIManager : MonoBehaviour
             {
                 Pause();
             }
-            else
+            else if (gameState == GameState.paused)
             {
                 Unpause();
             }
@@ -151,6 +168,22 @@ public class UIManager : MonoBehaviour
         Cursor.visible = true;
     }
     
-    #endregion 
-    
+    #endregion
+
+    public void DeathScreen()
+    {
+        //Time.timeScale = 0f;
+        //doc.rootVisualElement.visible = true;
+        //UnlockCursor();
+        //hud.DisableHUD();
+        //buttonsWrapper.Clear(); 
+        //buttonsWrapper.Add(deadButtons);
+        gameState = GameState.dead;
+        RestartLevel();
+    }
+
+    void RestartLevel()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
 }
