@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/MainMenu.uss?fileID=7433441132597879392&amp;guid=e2f6c577a27423143bbb6b552c79683f&amp;type=3#MainMenu"/>
+    <ui:VisualElement name="MainMenu" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.69); padding-right: 0%; margin-right: 45%; margin-left: 5%;">
+        <ui:Label text="Jump In, Jonny" name="Title" style="-unity-font-definition: url(&quot;project://database/Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Fonts/PerfectDOSVGA437.ttf?fileID=12800000&amp;guid=74a5091d8707f334b9a5c31ef71a64ba&amp;type=3#PerfectDOSVGA437&quot;); font-size: 60px; -unity-text-align: middle-center; color: rgb(229, 229, 229); align-self: center; justify-content: flex-start; align-content: flex-start; margin-top: 40px;"/>
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; margin-top: 35%; -unity-text-align: upper-left; align-self: center; align-content: flex-start; justify-content: center; margin-bottom: 10%;">
+            <ui:Button text="New Game" name="NewGameButton" class="menu-button"/>
+            <ui:Button text="Level Select" name="LevelSelectButton" class="menu-button"/>
+            <ui:Button text="Quit" name="QuitButton" class="menu-button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

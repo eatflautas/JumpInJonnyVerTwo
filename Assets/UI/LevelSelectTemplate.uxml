@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/MainMenu.uss?fileID=7433441132597879392&amp;guid=e2f6c577a27423143bbb6b552c79683f&amp;type=3#MainMenu"/>
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Button text="Tutorial" name="TutorialButton" class="menu-button"/>
+        <ui:Button text="Office" name="OfficeButton" class="menu-button"/>
+        <ui:Button text="Back" name="BackButton" class="menu-button"/>
+    </ui:VisualElement>
+</ui:UXML>
